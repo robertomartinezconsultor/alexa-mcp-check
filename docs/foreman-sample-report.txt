@@ -1,0 +1,119 @@
+alexa-mcp-check — sample report against Foreman MCP (local)
+============================================================
+
+Server: Foreman MCP (../proyecto, dist/index.js), spec 2025-11-25, Streamable HTTP
+Started with: FOREMAN_DATA_DIR=<temp dir> PORT=3457 node dist/index.js
+Health: {"name":"foreman-mcp","status":"ok","mcpEndpoint":"/mcp","spec":"2025-11-25","composer":"deterministic","store":{"jobs":7,"leads":5,"outbox":0,"shoppingListsPending":0}}
+
+Command:
+  node bin/alexa-mcp-check.js --url http://127.0.0.1:3457
+
+Output:
+alexa-mcp-check — Alexa+ readiness for MCP servers
+Target: http://127.0.0.1:3457
+MCP endpoint: http://127.0.0.1:3457/mcp
+Well-known: http://127.0.0.1:3457/.well-known/oauth-protected-resource
+Protocol target: 2025-11-25
+
+[PASS] Initialize handshake (initialize)
+       Server responded to initialize (HTTP 200).
+[PASS] Protocol version (2025-11-25 or later) (protocol_version)
+       Server negotiated protocolVersion 2025-11-25.
+[PASS] serverInfo present (server_info)
+       serverInfo: foreman-mcp@0.2.0.
+[PASS] tools/list non-empty (tools_list)
+       tools/list returned 11 tool(s): get_day_briefing, list_jobs, get_job, get_unanswered_leads, check_inventory, log_field_update, assign_crew, queue_dispatch, record_lead_reply, create_shopping_list, run_morning_dispatch.
+[PASS] Tool schemas (name, description, inputSchema object) (tools_schema)
+       Every tool has name, description and inputSchema with type "object".
+[PASS] tools/call (get_day_briefing) (tools_call)
+       tools/call get_day_briefing succeeded. Response preview: Briefing for 2026-10-23: 2 job(s) on the schedule today. Needs attention tomorrow: Chen Duplex (Bathroom rough-in plumbing, 09:30) has no crew assigned. Unanswe…
+[WARN] RFC 9728 protected-resource metadata (oauth_protected_resource)
+       GET http://127.0.0.1:3457/.well-known/oauth-protected-resource returned 404. No OAuth protected-resource metadata — acceptable if this deployment does not use account linking / OAuth, but Alexa+ integrations that require authorization will need it.
+       Fix: If you use OAuth/account linking, serve JSON at /.well-known/oauth-protected-resource with at least { resource, authorization_servers } per RFC 9728.
+[PASS] Error semantics (unknown tool) (error_semantics)
+       Calling a non-existent tool returned a result with isError=true, which MCP clients (and Alexa+) can surface as an error.
+
+Summary: 7 PASS, 1 WARN, 0 FAIL (8 checks)
+Result: READY (no FAIL checks)
+
+Exit code: 0
+
+JSON summary (from --json run):
+{
+  "target": "http://127.0.0.1:3457",
+  "mcpUrl": "http://127.0.0.1:3457/mcp",
+  "wellKnownUrl": "http://127.0.0.1:3457/.well-known/oauth-protected-resource",
+  "origin": "http://127.0.0.1:3457",
+  "protocolVersionTarget": "2025-11-25",
+  "checks": [
+    {
+      "id": "initialize",
+      "title": "Initialize handshake",
+      "status": "PASS",
+      "message": "Server responded to initialize (HTTP 200)."
+    },
+    {
+      "id": "protocol_version",
+      "title": "Protocol version (2025-11-25 or later)",
+      "status": "PASS",
+      "message": "Server negotiated protocolVersion 2025-11-25."
+    },
+    {
+      "id": "server_info",
+      "title": "serverInfo present",
+      "status": "PASS",
+      "message": "serverInfo: foreman-mcp@0.2.0."
+    },
+    {
+      "id": "tools_list",
+      "title": "tools/list non-empty",
+      "status": "PASS",
+      "message": "tools/list returned 11 tool(s): get_day_briefing, list_jobs, get_job, get_unanswered_leads, check_inventory, log_field_update, assign_crew, queue_dispatch, record_lead_reply, create_shopping_list, run_morning_dispatch."
+    },
+    {
+      "id": "tools_schema",
+      "title": "Tool schemas (name, description, inputSchema object)",
+      "status": "PASS",
+      "message": "Every tool has name, description and inputSchema with type \"object\"."
+    },
+    {
+      "id": "tools_call",
+      "title": "tools/call (get_day_briefing)",
+      "status": "PASS",
+      "message": "tools/call get_day_briefing succeeded. Response preview: Briefing for 2026-10-23: 2 job(s) on the schedule today. Needs attention tomorrow: Chen Duplex (Bathroom rough-in plumbing, 09:30) has no crew assigned. Unanswe…"
+    },
+    {
+      "id": "oauth_protected_resource",
+      "title": "RFC 9728 protected-resource metadata",
+      "status": "WARN",
+      "message": "GET http://127.0.0.1:3457/.well-known/oauth-protected-resource returned 404. No OAuth protected-resource metadata — acceptable if this deployment does not use account linking / OAuth, but Alexa+ integrations that require authorization will need it.",
+      "suggestion": "If you use OAuth/account linking, serve JSON at /.well-known/oauth-protected-resource with at least { resource, authorization_servers } per RFC 9728."
+    },
+    {
+      "id": "error_semantics",
+      "title": "Error semantics (unknown tool)",
+      "status": "PASS",
+      "message": "Calling a non-existent tool returned a result with isError=true, which MCP clients (and Alexa+) can surface as an error."
+    }
+  ],
+  "summary": {
+    "pass": 7,
+    "warn": 1,
+    "fail": 0,
+    "total": 8
+  },
+  "ok": true,
+  "tools": [
+    "get_day_briefing",
+    "list_jobs",
+    "get_job",
+    "get_unanswered_leads",
+    "check_inventory",
+    "log_field_update",
+    "assign_crew",
+    "queue_dispatch",
+    "record_lead_reply",
+    "create_shopping_list",
+    "run_morning_dispatch"
+  ]
+}
